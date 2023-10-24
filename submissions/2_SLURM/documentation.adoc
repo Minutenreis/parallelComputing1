@@ -1,0 +1,14 @@
+== documentation of Submission
+
+=== 3.1
+
+* login to ara: `ssh <name>@ara-login01.rz.uni-jena.de`
+* create .log file: `touch .log`
+* record the last names and append the outcome: `echo "Halank Dreßler Kröhl" | tee -a .log`
+* check the slurm version: `sacct --version | tee -a .log`
+* list the idle nodes: `sinfo --states=idle | tee -a .log`
+* list all jobs in the queue: `squeue | tee -a .log`
+* allocate a node: `salloc -p s_hadoop --time=10:00 --mem=2M -N 2 -n 3 --cpus-per-task=2 | tee -a .log`
+* list all jobs related to you: `squeue -u gi24ken | tee -a .log`
+* cancel the job again: `scancel 1990392 | tee -a .log` 
+* list all jobs related to you: `squeue -u gi24ken | tee -a .log`
