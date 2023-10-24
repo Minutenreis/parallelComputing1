@@ -2,15 +2,16 @@
 #SBATCH --job-name=fib
 #SBATCH --output=fib.out
 #SBATCH --error=fib.err
-#SBATCH --partition=s_hadoop
+#SBATCH --partition=s_hadoop,s_standard
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --time=00:05:00
-#SBATCH --cpus-per-task= TODO: how many sinfo -p s_hadoop
+#SBATCH --time=10:00
+#SBATCH --cpus-per-task=72
 
 # Load any necessary modules (if needed)
 # module load mymodule
 
 # Enter your executable commands here
 # Execute the compiled program
-echo "Hello, SLURM job!" # TODO: replace with your commands
+g++ fib.cpp -o fib.o
+./fib.o

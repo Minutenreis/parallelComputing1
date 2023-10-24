@@ -1,17 +1,10 @@
 #include <iostream>
 
 int fib(int n);
-int fastFib(int n, int n1);
 
-int main(int argc, char const *argv[])
+int main()
 {
-    if (argc != 2)
-    {
-        std::cout << "Usage: " << argv[0] << " <n:int>" << std::endl;
-        return 1;
-    }
-    int n = std::stoi(argv[1]);
-    std::cout << "fib(" << n << ") = " << fib(n) << std::endl;
+    std::cout << "fib(100) = " << fib(100) << std::endl;
     return 0;
 }
 
