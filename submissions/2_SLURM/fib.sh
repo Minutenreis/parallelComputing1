@@ -13,5 +13,9 @@
 
 # Enter your executable commands here
 # Execute the compiled program
+start_time=$(date +"%s")
 g++ fib.cpp -o fib.o
 ./fib.o
+end_time=$(date +"%s")
+elapsed_time=$((end_time - start_time))
+echo "Job completed in $(date -u -d @$elapsed_time +'%H:%M:%S')"
