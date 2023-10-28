@@ -8,7 +8,7 @@
 * check the slurm version: `sacct --version | tee -a .log`
 * list the idle nodes: `sinfo --states=idle | tee -a .log`
 * list all jobs in the queue: `squeue | tee -a .log`
-* allocate a node: `salloc -p s_hadoop --time=10:00 --mem=2M -N 2 -n 3 --cpus-per-task=2 | tee -a .log`
+* allocate a node: `salloc -p s_hadoop --time=10:00 --mem=2M -N 2 -n 3 --cpus-per-task=2 -J testJob | tee -a .log`
 * list all jobs related to you: `squeue -u gi24ken | tee -a .log`
 * cancel the job again: `scancel 1990631 | tee -a .log` 
 * list all jobs related to you: `squeue -u gi24ken | tee -a .log`
