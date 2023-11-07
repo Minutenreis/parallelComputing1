@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <algorithm>
+#include <cmath>
 
 double
 testDataAccessSpeed(int i_size)
@@ -22,18 +23,21 @@ testDataAccessSpeed(int i_size)
     }
 
     int k, i;
+    // std::ceil(10000.0 / l_s) to make sure the loop runs for at least 10000 times
+    int l_loops = std::ceil(10000.0 / l_s) * 1000;
 
     auto l_start_time = std::chrono::high_resolution_clock::now();
-    for (i = 0; i < std::max(l_s, 10000); ++i)
-    {
-        l_C[i % l_s] = l_A[i % l_s] + l_scalar * l_B[i % l_s];
-    }
+    for (k = 0; k < l_loops; ++k)
+        for (i = 0; i < l_s; ++i)
+        {
+            l_C[i] = l_A[i] + l_scalar * l_B[i];
+        }
 
     auto l_end_time = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> l_duration = l_end_time - l_start_time;
 
     using namespace std::chrono_literals;
-    double l_data_access_speed = 3.0 * std::max(l_s, 10000) * sizeof(double) / (l_duration / 1.0s) / (1024 * 1024 * 1024);
+    double l_data_access_speed = 3.0 * l_s * l_loops * sizeof(double) / (l_duration / 1.0s) / (1024 * 1024 * 1024);
 
     delete[] l_A;
     delete[] l_B;
@@ -44,16 +48,15 @@ testDataAccessSpeed(int i_size)
 
 int main()
 {
-    int l_size = 1;
+    int l_size[30] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 10000, 16384, 32768, 40000, 50000, 65536, 100000, 115000, 131072, 150000, 200000, 262144, 524288, 700000, 800000, 1048576};
 
     std::ofstream dataCSV;
     dataCSV.open("memory_bandwidth.csv");
     dataCSV << "Array Size (bytes), Bandwidth (GB/s)" << std::endl;
 
-    for (int i = 0; i < 25; i++)
+    for (int i = 0; i < 30; i++)
     {
-        dataCSV << l_size << "," << testDataAccessSpeed(l_size) << std::endl;
-        l_size *= 2;
+        dataCSV << l_size[i] * sizeof(double) * 3 << "," << testDataAccessSpeed(l_size[i]) << std::endl;
     }
     dataCSV.close();
 
