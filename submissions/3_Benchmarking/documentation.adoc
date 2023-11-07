@@ -1,0 +1,20 @@
+== documentation of Submission
+
+=== 4.1 memory benchmarking tools
+
+Valgrind:
+Valgrind is a widely used memory analysis tool that helps detect memory leaks, buffer overflows, and other memory-related issues. It includes tools like Memcheck and Massif for memory profiling. Memcheck is excellent for identifying memory errors, while Massif focuses on memory usage analysis.
+
+Google Sanitizers (AddressSanitizer, MemorySanitizer, LeakSanitizer):
+These sanitizers are part of the Clang and GCC compiler suites. AddressSanitizer checks for memory access issues (e.g., buffer overflows), MemorySanitizer detects uninitialized memory reads, and LeakSanitizer identifies memory leaks. These tools are highly efficient and integrated into the compiler.
+
+Heaptrack:
+memory profiler that provides insights into your program's dynamic memory allocation and deallocation. It helps you identify memory hotspots and track memory usage over time. It is particularly useful for optimizing memory-intensive C++ applications.
+
+Dr. Memory:
+memory analysis tool for Windows and Linux. It can help you detect memory leaks, buffer overflows, and other memory-related issues in C and C++ applications. It's especially useful for Windows development.
+
+jemalloc:
+memory allocator designed for high-performance applications. While it's not a traditional memory profiler, it can be a valuable tool to optimize memory allocation patterns in your C++ code. It is commonly used in conjunction with other profilers to improve memory efficiency.
+
+
