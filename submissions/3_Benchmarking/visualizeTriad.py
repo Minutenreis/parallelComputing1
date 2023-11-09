@@ -23,13 +23,13 @@ plt.xlabel("Array Size [bytes]")
 plt.xscale("log", base=2)
 plt.ylabel("Data Access Speed [GB/s]")
 plt.axvline(
-    192 * 1024, color="r", linestyle="--", label="L1d Cache Size"
+    32 * 1024, color="r", linestyle="--", label="L1d Cache Size"
 )  # todo: adjust to real cachesizes
 plt.axvline(
-    2 * 1024 * 1024, color="r", linestyle="--", label="L2 Cache Size"
+    1024 * 1024, color="r", linestyle="--", label="L2 Cache Size"
 )  # todo: adjust to real cachesizes
 plt.axvline(
-    6 * 1024 * 1024, color="r", linestyle="--", label="L3 Cache Size"
+    25344 * 1024, color="r", linestyle="--", label="L3 Cache Size"
 )  # todo: adjust to real cachesizes
 plt.title("Data Access Speed for different Array Sizes")
 plt.legend()

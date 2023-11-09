@@ -1,6 +1,16 @@
 == documentation of Submission
 
+= Report Submission 29.10.2023
+
+Justus Dreßler: all members contributed equally
+
+Julius Halank: all members contributed equally
+
+Thorsten Kröhl: all members contributed equally
+
 === 4.1 memory benchmarking tools
+
+// todo fix this
 
 Valgrind:
 Valgrind is a widely used memory analysis tool that helps detect memory leaks, buffer overflows, and other memory-related issues. It includes tools like Memcheck and Massif for memory profiling. Memcheck is excellent for identifying memory errors, while Massif focuses on memory usage analysis.
@@ -17,4 +27,20 @@ memory analysis tool for Windows and Linux. It can help you detect memory leaks,
 jemalloc:
 memory allocator designed for high-performance applications. While it's not a traditional memory profiler, it can be a valuable tool to optimize memory allocation patterns in your C++ code. It is commonly used in conjunction with other profilers to improve memory efficiency.
 
+=== 4.1 Cache Levels
+
+After an initial startup curve with very short arrays the graph seems to fit the expected cache speeds pretty well with L1d cache beeing fastest and L3 Cache being slowest and expectedly a sudden drop when you have to fall back to RAM instead of caches.
+
+=== 4.1 Compiler Flags
+
+Compiler: g++ that is default installed on the machines (no need to change anything)
+Flags:
+`-std=c++1y` => using `c++14` to get access to `std::chrono` to calculate speed +
+`-o dataAccessSpeed.out` => output file (so we can reference it in the python code) +
+`-O3` => optimization level 3 (highest) so we hopefully mainly test the array sizes and not how well we optimized the code manually +
+
+=== 4.1 Memory Bandwidth Ara Cluster
+
+Our node peaked at around 55 GB/s and the changes in the plot are mainly just the different cache levels (with the smaller caches being significantly faster than the bigger ones) and the sudden drop when we have to fall back to RAM.
+The only change we couldn't figure out was the spike at 240 KB. 
 
