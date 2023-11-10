@@ -1,6 +1,6 @@
 == documentation of Submission
 
-= Report Submission 29.10.2023
+=== Report Submission 29.10.2023
 
 Justus Dreßler: all members contributed equally
 
@@ -34,23 +34,29 @@ https://www.sisoftware.co.uk/q-a-memory-benchmark/ +
 
 **Most commonly used memory benchmarks**:
 
-Sequential Memory Operations: +
-- assessment of memory bandwidth through sequential operations on large data arrays
+Sequential Memory Operations: 
 
-Integer and Floating-Point Arithmetic: +
-- assessment for a combination of integer and floating-point operations to stress different aspects of memory subsystems
+* assessment of memory bandwidth through sequential operations on large data arrays
 
-Multi-Threaded Tests: +
-- assessment of memory bandwidth under multi-threaded conditions, simulating real-world usage
+Integer and Floating-Point Arithmetic:
 
-Cache and Memory Latency Tests: +
-- assessment of latency of cache and latency of main memory, to find out data access speed
+* assessment for a combination of integer and floating-point operations to stress different aspects of memory subsystems
 
-Random Access Patterns: +
-- assessment for the speed of random access, offering a different perspective on memory subsystem performance
+Multi-Threaded Tests:
 
-Buffered and Unbuffered Memory Tests: +
-- assesment of different memory types, such as buffered (registered) and unbuffered (unregistered), to provide a more nuanced analysis
+* assessment of memory bandwidth under multi-threaded conditions, simulating real-world usage
+
+Cache and Memory Latency Tests:
+
+* assessment of latency of cache and latency of main memory, to find out data access speed
+
+Random Access Patterns:
+
+* assessment for the speed of random access, offering a different perspective on memory subsystem performance
+
+Buffered and Unbuffered Memory Tests:
+
+* assessment of different memory types, such as buffered (registered) and unbuffered (unregistered), to provide a more nuanced analysis
 
 === 4.1 Cache Levels
 
@@ -60,9 +66,10 @@ After an initial startup curve with very short arrays the graph seems to fit the
 
 Compiler: g++ that is default installed on the machines (no need to change anything)
 Flags:
-`-std=c++1y` => using `c++14` to get access to `std::chrono` to calculate speed +
-`-o dataAccessSpeed.out` => output file (so we can reference it in the python code) +
-`-O3` => optimization level 3 (highest) so we hopefully mainly test the array sizes and not how well we optimized the code manually +
+
+* `-std=c\++1y` => using `c++14` to get access to `std::chrono` to calculate speed +
+* `-o dataAccessSpeed.out` => output file (so we can reference it in the python code) +
+* `-O3` => optimization level 3 (highest) so we hopefully mainly test the array sizes and not how well we optimized the code manually +
 
 === 4.1 Memory Bandwidth Ara Cluster
 
