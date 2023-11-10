@@ -10,22 +10,47 @@ Thorsten Kröhl: all members contributed equally
 
 === 4.1 memory benchmarking tools
 
-// todo fix this
+STREAM Benchmark:
+A synthetic benchmark program that measures the sustainable memory bandwidth and the corresponding CPU Speed, to check for bottlenecks.
+Counts how many bytes the user asked to be read plus how many bytes the user asked to be written.
+It is primarily designed to work with much larger datasets than the available cache-size of the system, therefor results are more indicative of the performance of very large, vector style applications.
+It performs four simple vector operations (Copy, Scale, Add, and Triad) on large arrays of data to measure memory transfer rates. The best perfromamce of typically 10 repetitions is chosen.
+https://www.cs.virginia.edu/stream/ref.html
 
-Valgrind:
-Valgrind is a widely used memory analysis tool that helps detect memory leaks, buffer overflows, and other memory-related issues. It includes tools like Memcheck and Massif for memory profiling. Memcheck is excellent for identifying memory errors, while Massif focuses on memory usage analysis.
+AIDA64:
+A system diagnostics and benchmarking program, that evaluate memory bandwidth and latency through Read, Write, and Copy operations.
+It offers command line parameters that can be combined and automated for network testing, automated reporting, remote connection maintenance and security features.
+This program is optimised for most of the popular AMD, Intel and VIA Processors. 
+The benchmarks are synthetic, so the results show only the theoretical achievable performance.
+https://www.aida64.com/products/features/benchmarking
 
-Google Sanitizers (AddressSanitizer, MemorySanitizer, LeakSanitizer):
-These sanitizers are part of the Clang and GCC compiler suites. AddressSanitizer checks for memory access issues (e.g., buffer overflows), MemorySanitizer detects uninitialized memory reads, and LeakSanitizer identifies memory leaks. These tools are highly efficient and integrated into the compiler.
+SiSoftware Sandra:
+A program for system diagnosis as well as memory benchmarking.
+Utilizes various synthetic benchmark tests e.g. arithmetic operations and resulting throughput for integer and floating-point types, as well as for operations specific to multimedia memory bandwidth.
+Doesn't use a fixed amount of RAM, but about 40-60% of system RAM, therefor results may be slower than e.g. with the STREAM benchmark.
+Usage of "[...]aggressive use of sheduling/overlapping of instructions in order to maximise memory throughput even on “slower” processors."
+https://www.sisoftware.co.uk/q-a-memory-benchmark/
 
-Heaptrack:
-memory profiler that provides insights into your program's dynamic memory allocation and deallocation. It helps you identify memory hotspots and track memory usage over time. It is particularly useful for optimizing memory-intensive C++ applications.
 
-Dr. Memory:
-memory analysis tool for Windows and Linux. It can help you detect memory leaks, buffer overflows, and other memory-related issues in C and C++ applications. It's especially useful for Windows development.
+Most commonly used memory benchmarks:
 
-jemalloc:
-memory allocator designed for high-performance applications. While it's not a traditional memory profiler, it can be a valuable tool to optimize memory allocation patterns in your C++ code. It is commonly used in conjunction with other profilers to improve memory efficiency.
+Sequential Memory Operations:
+- assessment of memory bandwidth through sequential operations on large data arrays
+
+Integer and Floating-Point Arithmetic:
+- assessment for a combination of integer and floating-point operations to stress different aspects of memory subsystems
+
+Multi-Threaded Tests:
+- assessment of memory bandwidth under multi-threaded conditions, simulating real-world usage
+
+Cache and Memory Latency Tests:
+- assessment of latency of cache and latency of main memory, to find out data access speed
+
+Random Access Patterns:
+- assessment for the speed of random access, offering a different perspective on memory subsystem performance
+
+Buffered and Unbuffered Memory Tests:
+- assesment of different memory types, such as buffered (registered) and unbuffered (unregistered), to provide a more nuanced analysis
 
 === 4.1 Cache Levels
 
