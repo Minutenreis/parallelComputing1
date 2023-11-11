@@ -29,3 +29,6 @@
 *.exe
 *.app
 *.out
+
+# binary data
+*.tar.xz
