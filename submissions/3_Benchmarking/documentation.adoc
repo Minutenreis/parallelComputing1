@@ -69,10 +69,10 @@ Flags:
 
 * `-std=c\++1y` => using `c++14` to get access to `std::chrono` to calculate speed +
 * `-o dataAccessSpeed.out` => output file (so we can reference it in the python code) +
-* `-O3` => optimization level 3 (highest) so we hopefully mainly test the array sizes and not how well we optimized the code manually +
+* `-O` => slight optimization to the code, but nothing involving major pattern matching (`-O3` removes whole redundant loops defeating our test ...)
 
 === 4.1 Memory Bandwidth Ara Cluster
 
-Our node peaked at around 55 GB/s and the changes in the plot are mainly just the different cache levels (with the smaller caches being significantly faster than the bigger ones) and the sudden drop when we have to fall back to RAM.
+Our node peaked at around 40 GB/s and the changes in the plot are mainly just the different cache levels (with the smaller caches being significantly faster than the bigger ones) and the sudden drop when we have to fall back to RAM.
 The only change we couldn't figure out was the spike at 240 KB. 
 

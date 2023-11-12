@@ -23,8 +23,8 @@ testDataAccessSpeed(int i_size)
     }
 
     int k, i;
-    // std::ceil(10000.0 / l_s) to make sure the loop runs for at least 10000 times
-    int l_loops = std::ceil(10000.0 / l_s) * 1000;
+    // (10000.0 / l_s + 1) to make sure the loop runs for at least 10^8 times
+    int l_loops = (10000.0 / l_s + 1) * 10000;
 
     auto l_start_time = std::chrono::high_resolution_clock::now();
     for (k = 0; k < l_loops; ++k)
@@ -34,13 +34,15 @@ testDataAccessSpeed(int i_size)
         }
 
     auto l_end_time = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> l_duration = l_end_time - l_start_time;
 
+    std::chrono::duration<double, std::milli> l_duration = l_end_time - l_start_time;
     double l_data_access_speed = 3.0 * l_s * l_loops * sizeof(double) / (l_duration.count() / 1000) / (1024 * 1024 * 1024);
 
     delete[] l_A;
     delete[] l_B;
     delete[] l_C;
+
+    std::cout << "Array size: " << l_s << ", Bandwidth: " << l_data_access_speed << " GB/s" << std::endl;
 
     return l_data_access_speed;
 }

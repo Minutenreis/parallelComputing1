@@ -14,7 +14,8 @@ module load tools/python/3.8
 
 # Enter your executable commands here
 # Execute the compiled program
+date
 lscpu
-g++ -std=c++1y dataAccessSpeed.cpp -o dataAccessSpeed.out -O3
+g++ -std=c++1y dataAccessSpeed.cpp -o dataAccessSpeed.out -O
 ./dataAccessSpeed.out
 python3 visualizeTriad.py
