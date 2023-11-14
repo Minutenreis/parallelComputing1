@@ -1,6 +1,6 @@
-== documentation of Submission
+== Report Submission 19.11.2023
 
-=== Report Submission 19.11.2023
+=== Collaborators
 
 Justus Dreßler: all members contributed equally
 
