@@ -1,0 +1,3 @@
+Tue 28 Nov 11:26:31 CET 2023
+tree_broadcast Number of Processes: 100 Number of Elements: 100000 Time: 0.302046 seconds
+MPI_Bcast      Number of Processes: 100 Number of Elements: 100000 Time: 0.0894696 seconds

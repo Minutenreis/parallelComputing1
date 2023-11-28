@@ -1,0 +1,17 @@
+Tue 28 Nov 11:23:43 CET 2023
+Old Rank: 7	New Rank: 3	Color: 1	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 8	New Rank: 0	Color: 2	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 9	New Rank: 1	Color: 2	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 10	New Rank: 2	Color: 2	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 11	New Rank: 3	Color: 2	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 12	New Rank: 0	Color: 3	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 13	New Rank: 1	Color: 3	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 14	New Rank: 2	Color: 3	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 15	New Rank: 3	Color: 3	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 0	New Rank: 0	Color: 0	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 1	New Rank: 1	Color: 0	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 2	New Rank: 2	Color: 0	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 3	New Rank: 3	Color: 0	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 4	New Rank: 0	Color: 1	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 5	New Rank: 1	Color: 1	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
+Old Rank: 6	New Rank: 2	Color: 1	Old Communicator: MPI_COMM_WORLD	New Communicator: MPI_COMM_SPLIT
