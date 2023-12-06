@@ -1,7 +1,8 @@
 #include <mpi.h>
 #include <assert.h>
 
-bool success(int err) {
+bool success(int err)
+{
     return err == MPI_SUCCESS;
 }
 
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
     assert(success(l_err));
 
     // Create a buffer of size equal to the number of processes for process 0 and size 1 for all other processes
-    double *buf = (double *)malloc(l_rank == 0 ? l_comm_size * sizeof(double) : sizeof(double));
+    double *buf = new double[l_rank == 0 ? l_comm_size * sizeof(double) : sizeof(double)];
     buf[0] = l_rank * 10.0; // Initialize the buffer values to rank * 10
 
     MPI_Win win;
@@ -30,7 +31,8 @@ int main(int argc, char *argv[])
     // General active target synchronization
     l_err = MPI_Win_fence(0, win);
     assert(success(l_err));
-    if (l_rank != 0) {
+    if (l_rank != 0)
+    {
         // All other processes put their data into the window of process 0
         l_err = MPI_Put(buf, 1, MPI_DOUBLE, 0, l_rank, 1, MPI_DOUBLE, win);
         assert(success(l_err));
@@ -38,24 +40,15 @@ int main(int argc, char *argv[])
     l_err = MPI_Win_fence(0, win);
     assert(success(l_err));
 
-    // Passive target synchronization
-    if (l_rank != 0) {
-        l_err = MPI_Win_lock(MPI_LOCK_EXCLUSIVE, 0, 0, win);
-        assert(success(l_err));
-        // All other processes put their data into the window of process 0
-        l_err = MPI_Put(buf, 1, MPI_DOUBLE, 0, l_rank, 1, MPI_DOUBLE, win);
-        assert(success(l_err));
-        l_err = MPI_Win_unlock(0, win);
-        assert(success(l_err));
-    }
-
-    if (l_rank == 0) {
-        for (int i = 0; i < l_comm_size; i++) {
+    if (l_rank == 0)
+    {
+        for (int i = 0; i < l_comm_size; i++)
+        {
             printf("buf[%d] = %.1f\n", i, buf[i]);
         }
     }
 
-    free(buf);
+    delete[] buf;
     l_err = MPI_Win_free(&win);
     assert(success(l_err));
 

@@ -1,5 +1,6 @@
 #include <mpi.h>
 #include <assert.h>
+#include <stdio.h>
 
 bool success(int status)
 {
@@ -22,7 +23,8 @@ int main(int argc, char *argv[])
     int data;
     MPI_Win win;
 
-    if (l_rank == 1) {
+    if (l_rank == 1)
+    {
         data = 100; // some data to send
     }
 
@@ -34,7 +36,8 @@ int main(int argc, char *argv[])
     l_err = MPI_Win_fence(0, win);
     assert(success(l_err));
 
-    if (l_rank == 1) {
+    if (l_rank == 1)
+    {
         // Process 1 puts its data into the window of process 0
         l_err = MPI_Put(&data, 1, MPI_INT, 0, 0, 1, MPI_INT, win);
         assert(success(l_err));
@@ -44,7 +47,8 @@ int main(int argc, char *argv[])
     l_err = MPI_Win_fence(0, win);
     assert(success(l_err));
 
-    if (l_rank == 0) {
+    if (l_rank == 0)
+    {
         // Process 0 now has the data from process 1
         printf("Received data: %d\n", data);
     }
