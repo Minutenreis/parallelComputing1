@@ -1,5 +1,6 @@
 #include <mpi.h>
 #include <assert.h>
+#include <stdio.h>
 
 bool success(int err)
 {
