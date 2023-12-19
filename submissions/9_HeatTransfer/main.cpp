@@ -34,7 +34,8 @@ int main(int argc, char **argv)
     int iteration, initialIteration;
 
     // Delta x and y squared
-    double deltaX2, deltaY2;
+    double deltaX2 = DX * DX;
+    double deltaY2 = DY * DY;
 
     // Time stamps
     double startTimeStamp;
@@ -49,23 +50,26 @@ int main(int argc, char **argv)
     initialIteration++;
 
     // Calculate the largest stable time step
-    // ToDo 
+    timeStep = deltaX2 * deltaY2 / (2.0 * DIFFUSION_CONSTANT * (deltaX2 + deltaY2));
 
     // Get the start time stamp
     startTimeStamp = MPI_Wtime();
 
     // Time evolve
-    for (iteration = initialIteration; iteration < initialIteration + numTimeSteps; iteration++) {
+    for (iteration = initialIteration; iteration < initialIteration + numTimeSteps; iteration++)
+    {
         // ToDo
         // Use your implemented functions in a correct order here.
 
         // Output field at specified intervals
-        if (iteration % IMAGE_OUTPUT_INTERVAL == 0) {
+        if (iteration % IMAGE_OUTPUT_INTERVAL == 0)
+        {
             write_field_to_file(&currentField, iteration, &parallelInfo);
         }
 
         // Write a checkpoint for easy restarting
-        if (iteration % RESTART_OUTPUT_INTERVAL == 0) {
+        if (iteration % RESTART_OUTPUT_INTERVAL == 0)
+        {
             write_restart_data(&currentField, &parallelInfo, iteration);
         }
 
@@ -76,7 +80,8 @@ int main(int argc, char **argv)
     endTimeStamp = MPI_Wtime();
 
     // Determine the CPU time used for the iteration
-    if (parallelInfo.rank == 0) {
+    if (parallelInfo.rank == 0)
+    {
         std::cout << "Iteration took " << (endTimeStamp - startTimeStamp) << " seconds." << std::endl;
         std::cout << "Reference value at 7,3: " << previousField.data[idx(7, 3, currentField.ny + 2)] << std::endl;
     }
