@@ -33,10 +33,6 @@ int main(int argc, char **argv)
     // Iteration counters
     int iteration, initialIteration;
 
-    // Delta x and y squared
-    double deltaX2 = DX * DX;
-    double deltaY2 = DY * DY;
-
     // Time stamps
     double startTimeStamp;
     double endTimeStamp;
@@ -50,6 +46,8 @@ int main(int argc, char **argv)
     initialIteration++;
 
     // Calculate the largest stable time step
+    double deltaX2 = currentField.dx * currentField.dx;
+    double deltaY2 = currentField.dy * currentField.dy;
     timeStep = deltaX2 * deltaY2 / (2.0 * DIFFUSION_CONSTANT * (deltaX2 + deltaY2));
 
     // Get the start time stamp
