@@ -39,14 +39,6 @@ void init_field_properties(Field *temperature, int nx, int ny, ParallelData *par
     temperature->ny_full = ny;
 }
 
-void fillWithOutsideTemp(double *buf, int size, double outsideTemp)
-{
-    for (int i = 0; i < size; i++)
-    {
-        buf[i] = outsideTemp;
-    }
-}
-
 void init_parallel_data(ParallelData *parallel, int nx, int ny)
 {
     int nx_local;
@@ -79,8 +71,8 @@ void init_parallel_data(ParallelData *parallel, int nx, int ny)
 
     // Create Cartesian communicator
     MPI_Cart_create(MPI_COMM_WORLD, 2, dims, periods, 1, &parallel->comm);
-    MPI_Cart_shift(parallel->comm, 0, 1, &parallel->nup, &parallel->ndown);
-    MPI_Cart_shift(parallel->comm, 1, 1, &parallel->nleft, &parallel->nright);
+    MPI_Cart_shift(parallel->comm, 0, 1, &parallel->nright, &parallel->nleft);
+    MPI_Cart_shift(parallel->comm, 1, 1, &parallel->nup, &parallel->ndown);
 
     // Get rank and size
     MPI_Comm_size(parallel->comm, &parallel->size);
@@ -94,8 +86,8 @@ void init_parallel_data(ParallelData *parallel, int nx, int ny)
     }
 
     // Create data types for halo exchange
-    MPI_Type_vector(nx_local + 2, 1, ny_local + 2, MPI_DOUBLE, &parallel->columntype);
-    MPI_Type_contiguous(ny_local + 2, MPI_DOUBLE, &parallel->rowtype);
+    MPI_Type_vector(nx_local, 1, ny_local + 2, MPI_DOUBLE, &parallel->columntype);
+    MPI_Type_contiguous(ny_local, MPI_DOUBLE, &parallel->rowtype);
     MPI_Type_commit(&parallel->columntype);
     MPI_Type_commit(&parallel->rowtype);
 
