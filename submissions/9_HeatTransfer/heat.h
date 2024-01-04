@@ -1,35 +1,40 @@
 #ifndef HEAT_H
 #define HEAT_H
 
+#include <mpi.h>
+
 // Data structure for representing the temperature field
-struct Field {
-    int nx;            // Local dimensions of the field in the x-direction
-    int ny;            // Local dimensions of the field in the y-direction
-    int nx_full;       // Global dimensions of the field in the x-direction
-    int ny_full;       // Global dimensions of the field in the y-direction
-    double dx;         // Grid spacing in the x-direction
-    double dy;         // Grid spacing in the y-direction
-    double *data;      // Array containing temperature field data
+struct Field
+{
+    int nx;       // Local dimensions of the field in the x-direction
+    int ny;       // Local dimensions of the field in the y-direction
+    int nx_full;  // Global dimensions of the field in the x-direction
+    int ny_full;  // Global dimensions of the field in the y-direction
+    double dx;    // Grid spacing in the x-direction
+    double dy;    // Grid spacing in the y-direction
+    double *data; // Array containing temperature field data
 };
 
 // Structure holding information for parallelizing tasks using MPI
-struct ParallelData {
-    int size;                       // Total number of MPI tasks
-    int rank;                       // Rank of the current MPI task
-    int nup, ndown, nleft, nright;  // Ranks of neighboring MPI tasks (up, down, left, right)
-    MPI_Comm comm;                  // MPI Cartesian communicator
-    MPI_Request requests[8];        // Array of requests for non-blocking communication
-    MPI_Datatype rowtype;           // MPI Datatype for communication of rows
-    MPI_Datatype columntype;        // MPI Datatype for communication of columns
-    MPI_Datatype subarraytype;      // MPI Datatype for communication in text I/O
-    MPI_Datatype restarttype;       // MPI Datatype for communication in restart I/O
-    MPI_Datatype filetype;          // MPI Datatype for file view in restart I/O
+struct ParallelData
+{
+    int size;                      // Total number of MPI tasks
+    int rank;                      // Rank of the current MPI task
+    int nup, ndown, nleft, nright; // Ranks of neighboring MPI tasks (up, down, left, right)
+    MPI_Comm comm;                 // MPI Cartesian communicator
+    MPI_Request requests[8];       // Array of requests for non-blocking communication [sendUp,sendDown,sendLeft,sendRight,recvUp,recvDown,recvLeft,recvRight]
+    MPI_Datatype rowtype;          // MPI Datatype for communication of rows
+    MPI_Datatype columntype;       // MPI Datatype for communication of columns
+    MPI_Datatype subarraytype;     // MPI Datatype for communication in text I/O
+    MPI_Datatype restarttype;      // MPI Datatype for communication in restart I/O
+    MPI_Datatype filetype;         // MPI Datatype for file view in restart I/O
 };
 
 // Inline function for indexing 2D arrays
-static inline int idx(int i, int j, int width)
+// COLUMN MAJOR ORDER
+static inline int idx(int x, int y, int width)
 {
-    return i * width + j;
+    return x * width + y;
 }
 
 // Function prototypes
@@ -142,10 +147,11 @@ void update_interior_temperature(Field *curr, Field *prev, double a, double dt);
  *
  * @param curr Pointer to the field structure representing the current temperature.
  * @param prev Pointer to the field structure representing the previous temperature.
+ * @param par Pointer to the parallel data structure.
  * @param a Coefficient for the heat equation.
  * @param dt Time step size.
  */
-void update_boundary_temperature(Field *curr, Field *prev, double a, double dt);
+void update_boundary_temperature(Field *curr, Field *prev, ParallelData *par, double a, double dt);
 
 /**
  * @brief Output routine that prints a picture of the temperature distribution.
@@ -191,9 +197,9 @@ void write_restart_data(Field *temperature, ParallelData *parallel, int iter);
  * @brief Read a restart checkpoint that contains field dimensions, current
  * iteration number, and temperature field.
  *
- * This function opens the restart checkpoint file, reads field dimensions, 
- * current iteration number, and temperature field using MPI I/O. It then sets 
- * the correct dimensions to MPI metadata, sets local dimensions, and allocates 
+ * This function opens the restart checkpoint file, reads field dimensions,
+ * current iteration number, and temperature field using MPI I/O. It then sets
+ * the correct dimensions to MPI metadata, sets local dimensions, and allocates
  * memory for the temperature field.
  *
  * @param temperature Pointer to the field structure representing the temperature.
@@ -216,7 +222,7 @@ void copy_field_data(Field *temperature1, Field *temperature2);
 /**
  * @brief Swap the data of two field structures.
  *
- * This function swaps the data pointers of two field structures, 
+ * This function swaps the data pointers of two field structures,
  * allowing for efficient exchange of data without copying.
  *
  * @param temperature1 Pointer to the first field structure.
@@ -246,4 +252,4 @@ void allocate_field(Field *temperature);
  */
 void cleanup_resources(Field *temperature1, Field *temperature2, ParallelData *parallel);
 
-#endif  // HEAT_H
+#endif // HEAT_H

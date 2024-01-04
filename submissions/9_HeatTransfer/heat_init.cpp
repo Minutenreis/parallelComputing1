@@ -1,25 +1,27 @@
 // Standard C++ and MPI headers for parallel programming
-#include <iostream>       // Standard C++ I/O
-#include <cstdlib>        // Standard C library functions
-#include <cstring>        // String manipulation functions
-#include <cassert>        // Assertion macros
-#include <cstdio>         // C Standard Input and Output Library
-#include <cmath>          // Math functions
-#include <unistd.h>       // POSIX operating system API
+#include <iostream> // Standard C++ I/O
+#include <cstdlib>  // Standard C library functions
+#include <cstring>  // String manipulation functions
+#include <cassert>  // Assertion macros
+#include <cstdio>   // C Standard Input and Output Library
+#include <cmath>    // Math functions
+#include <unistd.h> // POSIX operating system API
 
-#include <mpi.h>          // MPI for parallel programming
+#include <mpi.h> // MPI for parallel programming
 
 // Custom libraries for PNG writing and custom heat-related functionality
-#include "pngsaver.h"    // Custom library for PNG writing
-#include "heat.h"         // Custom library for heat-related functionality
-#include "constants.h"    // Constants header file
+#include "pngsaver.h"  // Custom library for PNG writing
+#include "heat.h"      // Custom library for heat-related functionality
+#include "constants.h" // Constants header file
 
-double* allocate_2d_array(int nx, int ny) {
-    double* array = new double[nx * ny];
+double *allocate_2d_array(int nx, int ny)
+{
+    double *array = new double[nx * ny];
     return array;
 }
 
-void init_field_properties(Field* temperature, int nx, int ny, ParallelData* parallel) {
+void init_field_properties(Field *temperature, int nx, int ny, ParallelData *parallel)
+{
     int nx_local, ny_local;
     int dims[2], coords[2], periods[2];
 
@@ -37,7 +39,16 @@ void init_field_properties(Field* temperature, int nx, int ny, ParallelData* par
     temperature->ny_full = ny;
 }
 
-void init_parallel_data(ParallelData* parallel, int nx, int ny) {
+void fillWithOutsideTemp(double *buf, int size, double outsideTemp)
+{
+    for (int i = 0; i < size; i++)
+    {
+        buf[i] = outsideTemp;
+    }
+}
+
+void init_parallel_data(ParallelData *parallel, int nx, int ny)
+{
     int nx_local;
     int ny_local;
     int world_size;
@@ -55,11 +66,13 @@ void init_parallel_data(ParallelData* parallel, int nx, int ny) {
     ny_local = ny / dims[1];
 
     // Check if the grid can be evenly divided among processors
-    if (nx_local * dims[0] != nx) {
+    if (nx_local * dims[0] != nx)
+    {
         std::cerr << "Cannot divide grid evenly among processors in the x-direction. " << nx_local << " x " << dims[0] << " != " << nx << std::endl;
         MPI_Abort(MPI_COMM_WORLD, -2);
     }
-    if (ny_local * dims[1] != ny) {
+    if (ny_local * dims[1] != ny)
+    {
         std::cerr << "Cannot divide grid evenly among processors in the y-direction. " << ny_local << " x " << dims[1] << " != " << ny << std::endl;
         MPI_Abort(MPI_COMM_WORLD, -2);
     }
@@ -74,7 +87,8 @@ void init_parallel_data(ParallelData* parallel, int nx, int ny) {
     MPI_Comm_rank(parallel->comm, &parallel->rank);
 
     // Print information (only from rank 0)
-    if (parallel->rank == 0) {
+    if (parallel->rank == 0)
+    {
         std::cout << "Using domain decomposition " << dims[0] << " x " << dims[1] << std::endl;
         std::cout << "Local domain size " << nx_local << " x " << ny_local << std::endl;
     }
@@ -91,7 +105,8 @@ void init_parallel_data(ParallelData* parallel, int nx, int ny) {
     int offsets[2] = {1, 1};
 
     // Adjust sizes and offsets for rank 0
-    if (parallel->rank == 0) {
+    if (parallel->rank == 0)
+    {
         sizes[0] = nx;
         sizes[1] = ny;
         offsets[0] = 0;
@@ -111,18 +126,22 @@ void init_parallel_data(ParallelData* parallel, int nx, int ny) {
     offsets[1] = 1 + coords[1] * ny_local;
 
     // Adjust sizes and offsets for boundary ranks
-    if (coords[0] == 0) {
+    if (coords[0] == 0)
+    {
         offsets[0] -= 1;
         subsizes[0] += 1;
     }
-    if (coords[0] == dims[0] - 1) {
+    if (coords[0] == dims[0] - 1)
+    {
         subsizes[0] += 1;
     }
-    if (coords[1] == 0) {
+    if (coords[1] == 0)
+    {
         offsets[1] -= 1;
         subsizes[1] += 1;
     }
-    if (coords[1] == dims[1] - 1) {
+    if (coords[1] == dims[1] - 1)
+    {
         subsizes[1] += 1;
     }
 
@@ -135,12 +154,14 @@ void init_parallel_data(ParallelData* parallel, int nx, int ny) {
     sizes[1] = ny_local + 2;
     offsets[0] = 1;
     offsets[1] = 1;
-    
+
     // Adjust offsets for boundary ranks
-    if (coords[0] == 0) {
+    if (coords[0] == 0)
+    {
         offsets[0] = 0;
     }
-    if (coords[1] == 0) {
+    if (coords[1] == 0)
+    {
         offsets[1] = 0;
     }
 
@@ -149,7 +170,8 @@ void init_parallel_data(ParallelData* parallel, int nx, int ny) {
     MPI_Type_commit(&parallel->restarttype);
 }
 
-void init_simulation(int argc, char *argv[], Field *current, Field *previous, int *nsteps, ParallelData *parallel, int *initialIteration) {
+void init_simulation(int argc, char *argv[], Field *current, Field *previous, int *nsteps, ParallelData *parallel, int *initialIteration)
+{
     // Default field dimensions
     int rows = DEFAULT_ROWS;
     int cols = DEFAULT_COLS;
@@ -165,7 +187,8 @@ void init_simulation(int argc, char *argv[], Field *current, Field *previous, in
     *initialIteration = ITERATIONS;
 
     // Check if checkpoint exists
-    if (access(CHECKPOINT, F_OK) == 0) {
+    if (access(CHECKPOINT, F_OK) == 0)
+    {
         // Read from a restart checkpoint
         read_restart_data(current, parallel, initialIteration);
 
@@ -179,10 +202,14 @@ void init_simulation(int argc, char *argv[], Field *current, Field *previous, in
 
         // Copy data from the current to the previous field
         copy_field_data(current, previous);
-    } else if (read_file) {
+    }
+    else if (read_file)
+    {
         // Read field data from the specified input file
         read_field_from_file(current, previous, input_file, parallel);
-    } else {
+    }
+    else
+    {
         // Set up parallel domain decomposition
         init_parallel_data(parallel, rows, cols);
 
@@ -199,7 +226,8 @@ void init_simulation(int argc, char *argv[], Field *current, Field *previous, in
     }
 }
 
-void init_heat_field(Field *temperature, ParallelData *parallel) {
+void init_heat_field(Field *temperature, ParallelData *parallel)
+{
     int i, j, ind, width;
     double radius;
     int dx, dy;
@@ -216,17 +244,22 @@ void init_heat_field(Field *temperature, ParallelData *parallel) {
     width = temperature->ny + 2;
 
     // Iterate over the grid points to set the initial temperature
-    for (i = 0; i < temperature->nx + 2; i++) {
-        for (j = 0; j < temperature->ny + 2; j++) {
+    for (i = 0; i < temperature->nx + 2; i++)
+    {
+        for (j = 0; j < temperature->ny + 2; j++)
+        {
             // Distance of point (i, j) from the origin
             dx = i + coords[0] * temperature->nx - temperature->nx_full / 2 + 1;
             dy = j + coords[1] * temperature->ny - temperature->ny_full / 2 + 1;
             ind = idx(i, j, width);
 
             // Set temperature based on whether the point is inside the disc
-            if (dx * dx + dy * dy < radius * radius) {
-                temperature->data[ind] = INSIDE_DISC_TEMPERATURE;  // Inside the disc
-            } else {
+            if (dx * dx + dy * dy < radius * radius)
+            {
+                temperature->data[ind] = INSIDE_DISC_TEMPERATURE; // Inside the disc
+            }
+            else
+            {
                 temperature->data[ind] = OUTSIDE_DISC_TEMPERATURE; // Outside the disc
             }
         }
@@ -234,29 +267,37 @@ void init_heat_field(Field *temperature, ParallelData *parallel) {
 
     // Boundary conditions
     // Left boundary
-    if (coords[1] == 0) {
-        for (i = 0; i < temperature->nx + 2; i++) {
+    if (coords[1] == 0)
+    {
+        for (i = 0; i < temperature->nx + 2; i++)
+        {
             ind = idx(i, 0, width);
             temperature->data[ind] = 20.0;
         }
     }
     // Right boundary
-    if (coords[1] == dims[1] - 1) {
-        for (i = 0; i < temperature->nx + 2; i++) {
+    if (coords[1] == dims[1] - 1)
+    {
+        for (i = 0; i < temperature->nx + 2; i++)
+        {
             ind = idx(i, temperature->ny + 1, width);
             temperature->data[ind] = 70.0;
         }
     }
     // Upper boundary
-    if (coords[0] == 0) {
-        for (j = 0; j < temperature->ny + 2; j++) {
+    if (coords[0] == 0)
+    {
+        for (j = 0; j < temperature->ny + 2; j++)
+        {
             ind = idx(0, j, width);
             temperature->data[ind] = 85.0;
         }
     }
     // Lower boundary
-    if (coords[0] == dims[0] - 1) {
-        for (j = 0; j < temperature->ny + 2; j++) {
+    if (coords[0] == dims[0] - 1)
+    {
+        for (j = 0; j < temperature->ny + 2; j++)
+        {
             ind = idx(temperature->nx + 1, j, width);
             temperature->data[ind] = 5.0;
         }
