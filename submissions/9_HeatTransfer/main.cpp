@@ -59,7 +59,7 @@ int main(int argc, char **argv)
         start_halo_exchange(&previousField, &parallelInfo);
         update_interior_temperature(&currentField, &previousField, DIFFUSION_CONSTANT, timeStep);
         complete_halo_exchange(&parallelInfo);
-        update_boundary_temperature(&currentField, &previousField, &parallelInfo, DIFFUSION_CONSTANT, timeStep);
+        update_boundary_temperature(&currentField, &previousField, DIFFUSION_CONSTANT, timeStep);
 
         // Output field at specified intervals
         if (iteration % IMAGE_OUTPUT_INTERVAL == 0)

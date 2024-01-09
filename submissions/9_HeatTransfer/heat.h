@@ -147,11 +147,10 @@ void update_interior_temperature(Field *curr, Field *prev, double a, double dt);
  *
  * @param curr Pointer to the field structure representing the current temperature.
  * @param prev Pointer to the field structure representing the previous temperature.
- * @param par Pointer to the parallel data structure.
  * @param a Coefficient for the heat equation.
  * @param dt Time step size.
  */
-void update_boundary_temperature(Field *curr, Field *prev, ParallelData *par, double a, double dt);
+void update_boundary_temperature(Field *curr, Field *prev, double a, double dt);
 
 /**
  * @brief Output routine that prints a picture of the temperature distribution.

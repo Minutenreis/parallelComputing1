@@ -28,26 +28,26 @@ void start_halo_exchange(Field *temperature, ParallelData *parallel)
     MPI_Isend(&temperature->data[idx(1, temperature->ny, width)], 1, parallel->columntype, parallel->ndown, 0, parallel->comm, &parallel->requests[1]);
     MPI_Irecv(&temperature->data[idx(1, temperature->ny + 1, width)], 1, parallel->columntype, parallel->ndown, MPI_ANY_TAG, parallel->comm, &parallel->requests[5]);
 
-    // (left)
+    // (right)
     // Communication 3: Send and receive data from the right neighbor
     // This exchanges the ghost cells in the leftmost column of the local temperature field
     MPI_Isend(&temperature->data[idx(1, 1, width)], 1, parallel->rowtype, parallel->nright, 0, parallel->comm, &parallel->requests[2]);
     MPI_Irecv(&temperature->data[idx(0, 1, width)], 1, parallel->rowtype, parallel->nright, MPI_ANY_TAG, parallel->comm, &parallel->requests[6]);
 
-    // (right)
+    // (left)
     // Communication 4: Send and receive data from the left neighbor
     // This exchanges the ghost cells in the rightmost column of the local temperature field
     MPI_Isend(&temperature->data[idx(temperature->nx, 1, width)], 1, parallel->rowtype, parallel->nleft, 0, parallel->comm, &parallel->requests[3]);
     MPI_Irecv(&temperature->data[idx(temperature->nx + 1, 1, width)], 1, parallel->rowtype, parallel->nleft, MPI_ANY_TAG, parallel->comm, &parallel->requests[7]);
 
-    MPI_Waitall(8, parallel->requests, MPI_STATUSES_IGNORE);
+    //MPI_Waitall(8, parallel->requests, MPI_STATUSES_IGNORE);
 }
 
 // wait that all the sends are done
 void complete_halo_exchange(ParallelData *parallel)
 {
     // Wait for the completion of non-blocking communication requests related to halo exchange
-    // MPI_Waitall(8, parallel->requests, MPI_STATUSES_IGNORE);
+    MPI_Waitall(8, parallel->requests, MPI_STATUSES_IGNORE);
 }
 
 double stencil(double center, double up, double down, double left, double right, double a, double dt, double dx2, double dy2)
@@ -95,7 +95,7 @@ void update_interior_temperature(Field *curr, Field *prev, double a, double dt)
     }
 }
 
-void update_boundary_temperature(Field *curr, Field *prev, ParallelData *par, double a, double dt)
+void update_boundary_temperature(Field *curr, Field *prev, double a, double dt)
 {
     int i, j;
     int ic, iu, id, il, ir; // Indices for center, up, down, left, right
