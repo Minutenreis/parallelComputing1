@@ -19,28 +19,26 @@ void start_halo_exchange(Field *temperature, ParallelData *parallel)
     // (up)
     // Communication 1: Send and receive data from the upper neighbor
     // This exchanges the ghost cells in the top row of the local temperature field
-    MPI_Isend(&temperature->data[idx(1, 1, width)], 1, parallel->columntype, parallel->nup, 0, parallel->comm, &parallel->requests[0]);
-    MPI_Irecv(&temperature->data[idx(1, 0, width)], 1, parallel->columntype, parallel->nup, MPI_ANY_TAG, parallel->comm, &parallel->requests[4]);
+    MPI_Isend(&temperature->data[idx(1, 1, width)], 1, parallel->rowtype, parallel->nup, 0, parallel->comm, &parallel->requests[2]);
+    MPI_Irecv(&temperature->data[idx(0, 1, width)], 1, parallel->rowtype, parallel->nup, MPI_ANY_TAG, parallel->comm, &parallel->requests[6]);
 
     // (down)
     // Communication 2: Send and receive data from the lower neighbor
     // This exchanges the ghost cells in the bottom row of the local temperature field
-    MPI_Isend(&temperature->data[idx(1, temperature->ny, width)], 1, parallel->columntype, parallel->ndown, 0, parallel->comm, &parallel->requests[1]);
-    MPI_Irecv(&temperature->data[idx(1, temperature->ny + 1, width)], 1, parallel->columntype, parallel->ndown, MPI_ANY_TAG, parallel->comm, &parallel->requests[5]);
+    MPI_Isend(&temperature->data[idx(temperature->nx, 1, width)], 1, parallel->rowtype, parallel->ndown, 0, parallel->comm, &parallel->requests[3]);
+    MPI_Irecv(&temperature->data[idx(temperature->nx + 1, 1, width)], 1, parallel->rowtype, parallel->ndown, MPI_ANY_TAG, parallel->comm, &parallel->requests[7]);
 
     // (right)
     // Communication 3: Send and receive data from the right neighbor
     // This exchanges the ghost cells in the leftmost column of the local temperature field
-    MPI_Isend(&temperature->data[idx(1, 1, width)], 1, parallel->rowtype, parallel->nright, 0, parallel->comm, &parallel->requests[2]);
-    MPI_Irecv(&temperature->data[idx(0, 1, width)], 1, parallel->rowtype, parallel->nright, MPI_ANY_TAG, parallel->comm, &parallel->requests[6]);
+    MPI_Isend(&temperature->data[idx(1, temperature->ny, width)], 1, parallel->columntype, parallel->nright, 0, parallel->comm, &parallel->requests[1]);
+    MPI_Irecv(&temperature->data[idx(1, temperature->ny + 1, width)], 1, parallel->columntype, parallel->nright, MPI_ANY_TAG, parallel->comm, &parallel->requests[5]);
 
     // (left)
     // Communication 4: Send and receive data from the left neighbor
     // This exchanges the ghost cells in the rightmost column of the local temperature field
-    MPI_Isend(&temperature->data[idx(temperature->nx, 1, width)], 1, parallel->rowtype, parallel->nleft, 0, parallel->comm, &parallel->requests[3]);
-    MPI_Irecv(&temperature->data[idx(temperature->nx + 1, 1, width)], 1, parallel->rowtype, parallel->nleft, MPI_ANY_TAG, parallel->comm, &parallel->requests[7]);
-
-    //MPI_Waitall(8, parallel->requests, MPI_STATUSES_IGNORE);
+    MPI_Isend(&temperature->data[idx(1, 1, width)], 1, parallel->columntype, parallel->nleft, 0, parallel->comm, &parallel->requests[0]);
+    MPI_Irecv(&temperature->data[idx(1, 0, width)], 1, parallel->columntype, parallel->nleft, MPI_ANY_TAG, parallel->comm, &parallel->requests[4]);
 }
 
 // wait that all the sends are done
@@ -84,13 +82,13 @@ void update_interior_temperature(Field *curr, Field *prev, double a, double dt)
         for (int j = 2; j < curr->ny; ++j)
         {
             ic = idx(i, j, width);
-            iu = idx(i, j + 1, width);
-            id = idx(i, j - 1, width);
-            ir = idx(i + 1, j, width);
-            il = idx(i - 1, j, width);
+            iu = idx(i - 1, j, width);
+            id = idx(i + 1, j, width);
+            ir = idx(i, j + 1, width);
+            il = idx(i, j - 1, width);
 
-            // Apply the five-point stencil to update the temperature at the left and right borders.
-            curr->data[ic] = stencil(prev->data[ic], prev->data[iu], prev->data[id], prev->data[il], prev->data[ir], a, dt, dx2, dy2);
+            // Apply the five-point stencil to update the temperature in the inner grid points.
+            curr->data[ic] = stencil(prev->data[ic], prev->data[iu], prev->data[id], prev->data[il], prev->data[ir], a, dt, dy2, dx2);
         }
     }
 }
@@ -107,59 +105,59 @@ void update_boundary_temperature(Field *curr, Field *prev, double a, double dt)
     dx2 = prev->dx * prev->dx;
     dy2 = prev->dy * prev->dy;
 
-    // Update the left border
+    // Update the upper border
     i = 1;
     for (j = 1; j < curr->ny + 1; j++)
     {
         ic = idx(i, j, width);
-        iu = idx(i, j + 1, width);
-        id = idx(i, j - 1, width);
-        ir = idx(i + 1, j, width);
-        il = idx(i - 1, j, width);
+        iu = idx(i - 1, j, width);
+        id = idx(i + 1, j, width);
+        ir = idx(i, j + 1, width);
+        il = idx(i, j - 1, width);
 
-        // Apply the five-point stencil to update the temperature at the left and right borders.
-        curr->data[ic] = stencil(prev->data[ic], prev->data[iu], prev->data[id], prev->data[il], prev->data[ir], a, dt, dx2, dy2);
+        // Apply the five-point stencil to update the temperature at the upper border.
+        curr->data[ic] = stencil(prev->data[ic], prev->data[iu], prev->data[id], prev->data[il], prev->data[ir], a, dt, dy2, dx2);
     }
 
-    // Update the right border
+    // Update the lower border
     i = curr->nx;
     for (j = 1; j < curr->ny + 1; j++)
     {
         ic = idx(i, j, width);
-        iu = idx(i, j + 1, width);
-        id = idx(i, j - 1, width);
-        ir = idx(i + 1, j, width);
-        il = idx(i - 1, j, width);
+        iu = idx(i - 1, j, width);
+        id = idx(i + 1, j, width);
+        ir = idx(i, j + 1, width);
+        il = idx(i, j - 1, width);
 
-        // Apply the five-point stencil to update the temperature at the left and right borders.
-        curr->data[ic] = stencil(prev->data[ic], prev->data[iu], prev->data[id], prev->data[il], prev->data[ir], a, dt, dx2, dy2);
+        // Apply the five-point stencil to update the temperature at the lower border.
+        curr->data[ic] = stencil(prev->data[ic], prev->data[iu], prev->data[id], prev->data[il], prev->data[ir], a, dt, dy2, dx2);
     }
 
-    // Update the upper border
+    // Update the left border
     j = 1;
     for (i = 1; i < curr->nx + 1; i++)
     {
         ic = idx(i, j, width);
-        iu = idx(i, j + 1, width);
-        id = idx(i, j - 1, width);
-        ir = idx(i + 1, j, width);
-        il = idx(i - 1, j, width);
+        iu = idx(i - 1, j, width);
+        id = idx(i + 1, j, width);
+        ir = idx(i, j + 1, width);
+        il = idx(i, j - 1, width);
 
-        // Apply the five-point stencil to update the temperature at the upper and lower borders.
-        curr->data[ic] = stencil(prev->data[ic], prev->data[iu], prev->data[id], prev->data[il], prev->data[ir], a, dt, dx2, dy2);
+        // Apply the five-point stencil to update the temperature at the left border.
+        curr->data[ic] = stencil(prev->data[ic], prev->data[iu], prev->data[id], prev->data[il], prev->data[ir], a, dt, dy2, dx2);
     }
 
-    // Update the lower border
+    // Update the right border
     j = curr->ny;
     for (i = 1; i < curr->nx + 1; i++)
     {
         ic = idx(i, j, width);
-        iu = idx(i, j + 1, width);
-        id = idx(i, j - 1, width);
-        ir = idx(i + 1, j, width);
-        il = idx(i - 1, j, width);
+        iu = idx(i - 1, j, width);
+        id = idx(i + 1, j, width);
+        ir = idx(i, j + 1, width);
+        il = idx(i, j - 1, width);
 
-        // Apply the five-point stencil to update the temperature at the upper and lower borders.
-        curr->data[ic] = stencil(prev->data[ic], prev->data[iu], prev->data[id], prev->data[il], prev->data[ir], a, dt, dx2, dy2);
+        // Apply the five-point stencil to update the temperature at the right border.
+        curr->data[ic] = stencil(prev->data[ic], prev->data[iu], prev->data[id], prev->data[il], prev->data[ir], a, dt, dy2, dx2);
     }
 }

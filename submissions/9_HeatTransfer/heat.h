@@ -6,12 +6,12 @@
 // Data structure for representing the temperature field
 struct Field
 {
-    int nx;       // Local dimensions of the field in the x-direction
-    int ny;       // Local dimensions of the field in the y-direction
-    int nx_full;  // Global dimensions of the field in the x-direction
-    int ny_full;  // Global dimensions of the field in the y-direction
-    double dx;    // Grid spacing in the x-direction
-    double dy;    // Grid spacing in the y-direction
+    int nx;       // Local dimensions of the field in the x-direction (vertical)
+    int ny;       // Local dimensions of the field in the y-direction (horizontal)
+    int nx_full;  // Global dimensions of the field in the x-direction (vertical)
+    int ny_full;  // Global dimensions of the field in the y-direction (horizontal)
+    double dx;    // Grid spacing in the x-direction (vertical)
+    double dy;    // Grid spacing in the y-direction (horizontal)
     double *data; // Array containing temperature field data
 };
 
@@ -20,7 +20,7 @@ struct ParallelData
 {
     int size;                      // Total number of MPI tasks
     int rank;                      // Rank of the current MPI task
-    int nup, ndown, nleft, nright; // Ranks of neighboring MPI tasks (up, down, left, right)
+    int nleft, nright, ndown, nup; // Ranks of neighboring MPI tasks (up, down, left, right)
     MPI_Comm comm;                 // MPI Cartesian communicator
     MPI_Request requests[8];       // Array of requests for non-blocking communication [sendUp,sendDown,sendLeft,sendRight,recvUp,recvDown,recvLeft,recvRight]
     MPI_Datatype rowtype;          // MPI Datatype for communication of rows
@@ -31,10 +31,11 @@ struct ParallelData
 };
 
 // Inline function for indexing 2D arrays
-// COLUMN MAJOR ORDER
-static inline int idx(int x, int y, int width)
+// i is vertical, j is horizontal
+// ROW MAJOR ORDER
+static inline int idx(int i, int j, int width)
 {
-    return x * width + y;
+    return i * width + j;
 }
 
 // Function prototypes

@@ -71,8 +71,8 @@ void init_parallel_data(ParallelData *parallel, int nx, int ny)
 
     // Create Cartesian communicator
     MPI_Cart_create(MPI_COMM_WORLD, 2, dims, periods, 1, &parallel->comm);
-    MPI_Cart_shift(parallel->comm, 0, 1, &parallel->nright, &parallel->nleft);
-    MPI_Cart_shift(parallel->comm, 1, 1, &parallel->nup, &parallel->ndown);
+    MPI_Cart_shift(parallel->comm, 0, 1, &parallel->nup, &parallel->ndown);
+    MPI_Cart_shift(parallel->comm, 1, 1, &parallel->nleft, &parallel->nright);
 
     // Get rank and size
     MPI_Comm_size(parallel->comm, &parallel->size);
