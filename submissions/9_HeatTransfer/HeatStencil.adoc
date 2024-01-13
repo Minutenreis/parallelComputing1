@@ -1,6 +1,7 @@
 = 2D Heat Equation
 
 == Parameter Changes and Results
+:hardbreaks-option:
 
 == Our default
 const int NSTEPS = 3000;        // Number of simulation steps
@@ -36,13 +37,15 @@ image::output_001_005_05_65_5.gif[""]
 
 === Diffusion constant
 
-const double DIFFUSION_CONSTANT = 0;
+const double DIFFUSION_CONSTANT = 0.07;
 
 image::output_001_001_00_65_5.gif[""]
 
 const double DIFFUSION_CONSTANT = 1060;
 
 image::output_001_001_1060_65_5.gif[""]
+
+Wir sehen hier keinen Unterschied, weil deltaT mit 1/alpha skalieren und die einzelnen updates mit alpha * deltaT. Alpha kürzt sich hier also raus. Die insgesamt simulierte Zeit über die 1000 dargestellten Zeitschritte ändert sich jedoch deutlich.
 
 === Dimensions
 
@@ -75,11 +78,17 @@ Compiled with `+mpicxx heat_init.cpp heat_io.cpp heat_update.cpp pngsaver.cpp co
 
 |===
 |Threads | Time in seconds | Speedup
-| 1 | 18.5503 | 1
-| 2 | 18.5176 | 1.001
-| 4 | 18.5206 | 1.001
-
+| 1 | 14.0459 | 1
+| 2 | 8.62803 | 1.627
+| 4 | 5.97022 | 2.352
+| 8 | 4.61706 | 3.042
+| 16 | 4.51645 | 3.109
+| 32 | 4.95333 | 2.834
+| 64 | 7.20484 | 1.949
+| 128 | 11.4973 | 1.222
 |===
+
+Sweetspot at 16 Threads (4.51645s)
 
 === Home PC (Intel Core i5-13600KF 6 PCore @ 3.5 Ghz 8 ECore @ 2.6 Ghz)
 
