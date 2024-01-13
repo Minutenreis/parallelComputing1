@@ -1,0 +1,18 @@
+= 2D Heat Equation
+
+== 
+
+
+== Parallel Performance 
+
+=== Ara Cluster (2x Intel Xeon Gold 6140 18 Core 2,3 Ghz)
+
+|===
+|Threads | Time | Speedup
+|===
+
+=== Home PC (Intel Core i5-13600KF 6 PCore @ 3.5 Ghz 8 ECore @ 2.6 Ghz)
+
+|===
+|Threads | Time | Speedup
+|===
