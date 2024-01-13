@@ -1,6 +1,68 @@
 = 2D Heat Equation
 
-== 
+== Parameter Changes and Results
+
+== Our default
+const int NSTEPS = 3000;        // Number of simulation steps
+const double DX = 0.01;          // Grid spacing in the x-direction
+const double DY = 0.01;          // Grid spacing in the y-direction
+const double DIFFUSION_CONSTANT = 0.5;  // Diffusion constant determines the rate of heat transfer in the material
+
+// Default field dimensions
+const int DEFAULT_ROWS = 2000;
+const int DEFAULT_COLS = 2000;
+
+// Temperature values
+const double INSIDE_DISC_TEMPERATURE = 65.0;   // Temperature inside the disc
+const double OUTSIDE_DISC_TEMPERATURE = 5.0;   // Temperature outside the disc
+
+image::output_001_001_05_65_5.gif[""]
+
+=== NSTEPS
+
+const int NSTEPS = 2000;   
+
+=== Delta X
+
+const double DX = 0.05;
+
+image::output_005_001_05_65_5.gif[""]
+
+=== Delta Y
+
+const double DY = 0.05;
+
+image::output_001_005_05_65_5.gif[""]
+
+=== Diffusion constant
+
+const double DIFFUSION_CONSTANT = 0;
+
+image::output_001_001_00_65_5.gif[""]
+
+const double DIFFUSION_CONSTANT = 1060;
+
+image::output_001_001_1060_65_5.gif[""]
+
+=== Dimensions
+
+const int DEFAULT_ROWS = 4000;
+
+image::output_001_001_05_65_5_4000x2000.gif[""]
+
+const int DEFAULT_COLS = 4000;
+
+image::output_001_001_05_65_5_2000x4000.gif[""]
+
+=== Temperature
+
+const double INSIDE_DISC_TEMPERATURE = 1000.0; 
+
+image::output_001_001_05_1000_5.gif[""]
+
+const double OUTSIDE_DISC_TEMPERATURE = 30.0;
+
+image::output_001_001_05_65_30.gif[""]
 
 
 == Parallel Performance 
