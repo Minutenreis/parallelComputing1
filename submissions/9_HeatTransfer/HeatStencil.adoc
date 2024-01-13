@@ -5,14 +5,31 @@
 
 == Parallel Performance 
 
+All tests at default settings.
+
 === Ara Cluster (2x Intel Xeon Gold 6140 18 Core 2,3 Ghz)
 
+Compiled with `+mpicxx heat_init.cpp heat_io.cpp heat_update.cpp pngsaver.cpp constants.h heat.h pngsaver.h main.cpp -o heat.o -lpng -Ofast -march=native -mtune=native+`
+
 |===
-|Threads | Time | Speedup
+|Threads | Time in seconds | Speedup
+| 1 | 18.5503 | 1
+| 2 | 18.5176 | 1.001
+| 4 | 18.5206 | 1.001
+
 |===
 
 === Home PC (Intel Core i5-13600KF 6 PCore @ 3.5 Ghz 8 ECore @ 2.6 Ghz)
 
+Compiled with `+mpicxx heat_init.cpp heat_io.cpp heat_update.cpp pngsaver.cpp constants.h heat.h pngsaver.h main.cpp -o heat.o -lpng -Ofast -march=native -mtune=native+`
+
 |===
-|Threads | Time | Speedup
+|Threads | Time in seconds | Speedup
+| 1 | 6.85385 | 1
+| 2 | 4.8049 | 1.426
+| 4 | 3.50821 | 1.953
+| 8 | 3.98596 | 1.719
+| 16 | 4.43002 | 1.546
 |===
+
+Sweetspot at 4 Threads (3.50821s)
