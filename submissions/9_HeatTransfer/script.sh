@@ -6,7 +6,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --time=10:00
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=72
 
 # Purge all currently loaded modules to start with a clean environment
 module purge
@@ -36,7 +36,7 @@ for i in 1,2,4,8,16,32,64,128
 do
     mpirun --oversubscribe -n $i heat_mpi
     rm -f *.png # Remove old PNG files
-    rm -f *.DAT # Remove old DAT files
+    rm -f HEAT.dat # Remove old DAT files
 done
 
 # Clean up object files after the run
