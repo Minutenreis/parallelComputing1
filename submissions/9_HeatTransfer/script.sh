@@ -34,9 +34,9 @@ mpic++ -Ofast -march=native -mtune=native -Wall -o heat_mpi main.o pngsaver.o he
 # --oversubscribe: Allow more processes than available cores
 for i in 1,2,4,8,16,32,64,128
 do
+    mpirun --oversubscribe -n $i heat_mpi
     rm -f *.png # Remove old PNG files
     rm -f *.DAT # Remove old DAT files
-    mpirun --oversubscribe -n $i heat_mpi
 done
 
 # Clean up object files after the run
