@@ -11,10 +11,13 @@ input_file = sys.argv[1]
 with open(input_file, "r") as f:
     lines = f.readlines()
     header = lines[0].strip().split(",")
-    data = [float(line.strip().split(",")) for line in lines[1:]]
+    data = [[float(i) for i in line.strip().split(",")] for line in lines[1:]]
+    columns = list(zip(*data))
 
-for i in range(1,len(data)):
-    plt.plot([int(row[0]) for row in data], [int(row[i]) for row in data], label=header[i])
+for i in range(1,len(header)):
+    plt.plot([row[0] for row in data], [row[i] for row in data], label=header[i])
 plt.xlabel(header[0])
 plt.legend()
+# plt.yscale("log")
+plt.xscale("log")
 plt.savefig("performance.png")
