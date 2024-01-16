@@ -7,10 +7,13 @@
 #SBATCH --ntasks=1
 #SBATCH --time=10:00
 #SBATCH --cpus-per-task=72
+module purge
 
 # Load any necessary modules (if needed)
 # module load mymodule
-
+module load compiler/gcc/11.2.0
+module load tools/python/3.8
+python -m pip install --user matplotlib
 
 # Enter your executable commands here
 # Execute the compiled program
