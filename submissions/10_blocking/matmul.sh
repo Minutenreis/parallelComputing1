@@ -16,3 +16,5 @@
 # Execute the compiled program
 date
 g++ matmul.cpp -o matmul.o -march=native -O2
+./matmul.o
+python3 performance.py
