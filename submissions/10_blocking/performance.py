@@ -1,11 +1,11 @@
 import sys
 from matplotlib import pyplot as plt
 
-if len(sys.argv) != 2 and len(sys.argv[1]) != 3:
-    print("Usage: python performance.py <input_file>")
+if len(sys.argv) != 2 and len(sys.argv) != 3:
+    print("Usage: python performance.py <input_file> <opt: output_file>")
     sys.exit(1)
     
-if len(sys.argv[1]) == 3:
+if len(sys.argv) == 3:
     output_file = sys.argv[2]
 else:
     output_file = "performance.png"
