@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
   for (int i = 32; i <= 8192; i *= 2)
   {
-    int repeat = 10000 / i;
+    int64_t repeat = 8192 * 8192 * 10 / (i * i);
     if (repeat < 10)
       repeat = 10;
 
@@ -114,5 +114,9 @@ int main(int argc, char *argv[])
     double gflops_4 = 2.0 * i * i * repeat / duration_4.count();
 
     io_stream << i << "," << gflops_1 << "," << gflops_2 << "," << gflops_3 << "," << gflops_4 << std::endl;
+
+    delete[] A;
+    delete[] b;
+    delete[] c;
   }
 }

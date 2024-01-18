@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
   io_stream << "size, mnk, mkn, kmn, knm, nkm, nmk" << std::endl;
   for (int i = 2; i <= 1024; i *= 2)
   {
-    int repeat = 1000 / i;
+    int64_t repeat = 1024 * 1024 * 8 * 10 / (i * i * i);
     if (repeat < 10)
       repeat = 10;
 
