@@ -68,18 +68,24 @@ int main(int argc, char *argv[])
   std::ofstream io_stream;
   io_stream.open(path);
 
-  int repeat = 10;
   io_stream << "size,nonblocking,blocking_k,blocking_m,blocking_mk" << std::endl;
 
   for (int i = 32; i <= 8192; i *= 2)
   {
+    int repeat = 10000 / i;
+    if (repeat < 10)
+      repeat = 10;
+
     double *A = new double[i * i];
-    double *b = new double[i * i];
-    double *c = new double[i * i];
+    double *b = new double[i];
+    double *c = new double[i];
 
     for (int j = 0; j < i * i; j++)
     {
       A[j] = 1.0;
+    }
+    for (int j = 0; j < i; j++)
+    {
       b[j] = 1.0;
       c[j] = 0.0;
     }
@@ -97,15 +103,15 @@ int main(int argc, char *argv[])
       impl_blocked_mk(A, b, c, i, i, 4);
     auto end_time4 = std::chrono::high_resolution_clock::now();
 
-    auto duration_1 = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time) / repeat;
-    auto duration_2 = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time2 - end_time) / repeat;
-    auto duration_3 = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time3 - end_time2) / repeat;
-    auto duration_4 = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time4 - end_time3) / repeat;
+    auto duration_1 = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time);
+    auto duration_2 = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time2 - end_time);
+    auto duration_3 = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time3 - end_time2);
+    auto duration_4 = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time4 - end_time3);
 
-    double gflops_1 = 2.0 * i * i / duration_1.count();
-    double gflops_2 = 2.0 * i * i / duration_2.count();
-    double gflops_3 = 2.0 * i * i / duration_3.count();
-    double gflops_4 = 2.0 * i * i / duration_4.count();
+    double gflops_1 = 2.0 * i * i * repeat / duration_1.count();
+    double gflops_2 = 2.0 * i * i * repeat / duration_2.count();
+    double gflops_3 = 2.0 * i * i * repeat / duration_3.count();
+    double gflops_4 = 2.0 * i * i * repeat / duration_4.count();
 
     io_stream << i << "," << gflops_1 << "," << gflops_2 << "," << gflops_3 << "," << gflops_4 << std::endl;
   }
