@@ -17,4 +17,29 @@ io_C[l_m * i_n + l_n] += i_A[l_m * i_k + l_k] * i_B[l_k * i_n + l_n];
 
 image::performance_blocking.png[]
 
+[source,sh]
+[gi24ken@node286 ~]$ getconf -a | grep CACHE
+LEVEL1_ICACHE_SIZE                 32768
+LEVEL1_ICACHE_ASSOC                8
+LEVEL1_ICACHE_LINESIZE             64
+LEVEL1_DCACHE_SIZE                 32768
+LEVEL1_DCACHE_ASSOC                8
+LEVEL1_DCACHE_LINESIZE             64
+LEVEL2_CACHE_SIZE                  1048576
+LEVEL2_CACHE_ASSOC                 16
+LEVEL2_CACHE_LINESIZE              64
+LEVEL3_CACHE_SIZE                  25952256
+LEVEL3_CACHE_ASSOC                 11
+LEVEL3_CACHE_LINESIZE              64
+LEVEL4_CACHE_SIZE                  0
+LEVEL4_CACHE_ASSOC                 0
+LEVEL4_CACHE_LINESIZE              0
+
+We observed the first drop after i=2^8^=256, which means we load 2^8^ * 8 * 4 + 4 * 8 = 8192 + 32.
+// TODO : Why is there a dropoff here? 8192 is not a cache size.
+
+The second drop is after i=2^10^=1024, which we load 2^10^ * 8 * 4 + 4 * 8 = 32768 + 32. This is the L1d cache size.
+
+// TODO : What about the vector size?
+
 // TODO : Cache Levels
