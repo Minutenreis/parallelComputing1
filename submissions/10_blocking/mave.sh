@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=matmul
-#SBATCH --output=matmul_%j.output
-#SBATCH --error=matmul_%j.err
+#SBATCH --job-name=mave
+#SBATCH --output=mave_%j.output
+#SBATCH --error=mave_%j.err
 #SBATCH --partition=s_hadoop,s_standard
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
