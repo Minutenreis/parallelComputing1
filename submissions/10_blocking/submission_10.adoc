@@ -35,11 +35,11 @@ LEVEL4_CACHE_SIZE                  0
 LEVEL4_CACHE_ASSOC                 0
 LEVEL4_CACHE_LINESIZE              0
 
-We observed the first drop after i=2^8^=256, which means we load 2^8^ * 8 * 4 + 4 * 8 = 8192 + 32.
-// TODO : Why is there a dropoff here? 8192 is not a cache size.
+We observed the first drop at i=2^9^=512, which means we load 2^9^ * 8 * 4 + 4 * 8 = 16384 + 32.
+This exceeds one half of the L1d cache size.
+This is problematic because we only load 8*4=32 bytes of each array at a time, meaning we don't use half the cache.
 
-The second drop is after i=2^10^=1024, which we load 2^10^ * 8 * 4 + 4 * 8 = 32768 + 32. This is the L1d cache size.
+The second drop is at i=2^11^=1024, which we load 2^11^ * 8 * 4 + 4 * 8 = 65536 + 32.
+This is exceeding the L1d size so it has to fallback to L2 cache.
 
-// TODO : What about the vector size?
-
-// TODO : Cache Levels
+// TODO : Why doesn't 2^10^=2048 cause a dropoff? 2^10^ * 8 * 4 + 4 * 8 = 32768 + 32 > L1d.
