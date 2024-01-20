@@ -35,11 +35,14 @@ LEVEL4_CACHE_SIZE                  0
 LEVEL4_CACHE_ASSOC                 0
 LEVEL4_CACHE_LINESIZE              0
 
-We observed the first drop at i=2^9^=512, which means we load 2^9^ * 8 * 4 + 4 * 8 = 16384 + 32.
+We observed the first drop at i=2^9^=512, which means we load 2^9^ * 8 * 4 + 4 * 8 = 16384 + 32 bytes.
 This exceeds one half of the L1d cache size.
-This is problematic because we only load 8*4=32 bytes of each array at a time, meaning we don't use half the cache.
+This is problematic because we only load 8*4=32 bytes of each array at a time but have a cachelinesize of 64 bytes, meaning we don't use half the cache.
 
-The second drop is at i=2^11^=1024, which we load 2^11^ * 8 * 4 + 4 * 8 = 65536 + 32.
+The second drop is at i=2^11^=1024, where we load 2^11^ * 8 * 4 + 4 * 8 = 65536 + 32 bytes.
 This is exceeding the L1d size so it has to fallback to L2 cache.
 
-We are not quite sure why the drop isn't already at i=2^10^=2048, which we load 2^10^ * 8 * 4 + 4 * 8 = 32768 + 32. This should both exceed the L1d size by 32 bytes and since the cache line size is not aligned we should also be unable to use half the cache size. Non the less there isn't a drop here and we are not sure why.
+We are not sure why 2 drops occur, because we are always within the L2 cache size 2^13^=8192 8192*8*4+4*8=524288+32 < 1048576.
+And if 2 drops exist we are not sure  why the second drop isn't already at i=2^10^=2048, where we load 2^10^ * 8 * 4 + 4 * 8 = 32768 + 32 bytes. 
+This should both exceed the L1d size by 32 bytes and since the cache line size is not aligned we should also be unable to use half the cache size. 
+Nonetheless there isn't a drop here and we are not sure why.
