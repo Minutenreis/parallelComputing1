@@ -41,8 +41,8 @@ void impl_blocked_m(double *i_A,
 
   std::size_t l_nBlocks = i_m / i_blockSize;
   for (std::size_t l_bm = 0; l_bm < l_nBlocks; l_bm++)
-    for (std::size_t l_m = l_bm * i_blockSize; l_m < (l_bm + 1) * i_blockSize; l_m++)
-      for (std::size_t l_k = 0; l_k < i_k; l_k++)
+    for (std::size_t l_k = 0; l_k < i_k; l_k++)
+      for (std::size_t l_m = l_bm * i_blockSize; l_m < (l_bm + 1) * i_blockSize; l_m++)
         io_c[l_m] += i_A[l_m * i_k + l_k] * i_b[l_k];
 }
 
@@ -57,8 +57,8 @@ void impl_blocked_mk(double *i_A,
   std::size_t l_nBlocks = i_k / i_blockSize;
   for (std::size_t l_bk = 0; l_bk < l_nBlocks; l_bk++)
     for (std::size_t l_bm = 0; l_bm < l_nBlocks; l_bm++)
-      for (std::size_t l_m = l_bm * i_blockSize; l_m < (l_bm + 1) * i_blockSize; l_m++)
-        for (std::size_t l_k = l_bk * i_blockSize; l_k < (l_bk + 1) * i_blockSize; l_k++)
+      for (std::size_t l_k = l_bk * i_blockSize; l_k < (l_bk + 1) * i_blockSize; l_k++)
+        for (std::size_t l_m = l_bm * i_blockSize; l_m < (l_bm + 1) * i_blockSize; l_m++)
           io_c[l_m] += i_A[l_m * i_k + l_k] * i_b[l_k];
 }
 
