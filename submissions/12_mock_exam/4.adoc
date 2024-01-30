@@ -1,0 +1,23 @@
+= Aufg 4
+
+[source, cpp]
+----
+a) (entspricht L=1 in der Vorlesung)
+  i. Cold-Misses:
+    A: 128 * 128 = 2^14 = 16384
+    B: 128 * 128 = 2^14 = 16384
+  ii. Capacity-Misses:
+    A: 0
+    B: 0
+b) (entspricht L>1 [L=8] in der Vorlesung)
+  i. Cold-Misses:
+    A: 128 * 128 / 8 = 2^11 = 2048
+    B: 128 * 128 / 8 = 2^11 = 2048
+  ii. Capacity-Misses:
+    A: 7/8 * 128 * 128 = 14336 ~ 2^14
+    B: 0
+c)
+  128 * sizeof(cacheLine) für A (einmal eine vertikale im Speicher)
+  128 * sizeof(double) für B (eine Horizontale)
+  = 128 * 64 + 128 * 8 = 2^13 + 2^10 = 9216
+----
