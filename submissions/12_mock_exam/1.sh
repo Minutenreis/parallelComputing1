@@ -1,8 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=s_hadoop
 #SBATCH --nodes=10
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=480
+#SBATCH --cpus-per-task=48
 #SBATCH --job-name=quantum_job
 #SBATCH --time=10:00:00
 
