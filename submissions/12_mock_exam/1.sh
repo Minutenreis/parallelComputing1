@@ -8,4 +8,5 @@
 # meiner Meinung nach reicht `module load openmpi/4.0.3`
 module load mpi/openmpi/4.0.3-gcc-10.2.0
 
+mpicxx -o quantum_sim quantum_sim.cpp
 mpirun -np 480 ./quantum_sim
