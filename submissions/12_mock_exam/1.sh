@@ -2,7 +2,7 @@
 #SBATCH --partition=s_hadoop
 #SBATCH --nodes=2
 #SBATCH --ntasks=20
-#SBATCH --cpu-per-task=1
+#SBATCH --cpus-per-task=1
 #SBATCH --job-name=quantum_job
 #SBATCH --output=quantum_job.out
 #SBATCH --error=quantum_job.err
